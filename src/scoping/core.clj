@@ -1,7 +1,7 @@
 (ns scoping.core)
 (require '[clj-time.core :as t])
 
-(t/after? one two)
+;; (t/after? one two)
 
 (defn -main [& args]
   (println "Hello World"))
@@ -9,23 +9,27 @@
 ;; priorities: holidays/travel, oncall, inday, buffers, tasks
 ;; We want 6 story points of buffer after every 18 story points of work
 
+;; add all hoplidays in first, assume they all fit into sprints
+;; then add buffers into tasks (every 18 points)
+;; then add tasks to sprints
+
 (defstruct item :type :story-points :date :description)
 
-(defstruct sprint :start :end :number :tasks) ;; start and end are dates
+(defstruct sprint :start :end :number :tasks :points-left) ;; start and end are dates
 
 (def sprints (list
-              (struct sprint (t/date-time 2020 1 6) (t/date-time 2020 1 20) 1 (list))
-              (struct sprint (t/date-time 2020 1 20) (t/date-time 2020 2 3) 2 (list))
-              (struct sprint (t/date-time 2020 2 3) (t/date-time 2020 2 17) 3 (list))
-              (struct sprint (t/date-time 2020 2 17) (t/date-time 2020 3 2) 4 (list))
-              (struct sprint (t/date-time 2020 3 2) (t/date-time 2020 3 3) 5 (list))
-              (struct sprint (t/date-time 2020 3 30) (t/date-time 2020 4 13) 6 (list))
-              (struct sprint (t/date-time 2020 4 13) (t/date-time 2020 4 27) 7 (list))
-              (struct sprint (t/date-time 2020 4 27) (t/date-time 2020 5 11) 8 (list))
-              (struct sprint (t/date-time 2020 5 11) (t/date-time 2020 5 25) 9 (list))
-              (struct sprint (t/date-time 2020 5 25) (t/date-time 2020 6 8) 10 (list))
-              (struct sprint (t/date-time 2020 6 8) (t/date-time 2020 6 22) 11 (list))
-              (struct sprint (t/date-time 2020 6 22) (t/date-time 2020 7 6) 12 (list))
+              (struct sprint (t/date-time 2020 1 6) (t/date-time 2020 1 20) 1 (list) 6)
+              (struct sprint (t/date-time 2020 1 20) (t/date-time 2020 2 3) 2 (list) 6)
+              (struct sprint (t/date-time 2020 2 3) (t/date-time 2020 2 17) 3 (list) 6)
+              (struct sprint (t/date-time 2020 2 17) (t/date-time 2020 3 2) 4 (list) 6)
+              (struct sprint (t/date-time 2020 3 2) (t/date-time 2020 3 3) 5 (list) 6)
+              (struct sprint (t/date-time 2020 3 30) (t/date-time 2020 4 13) 6 (list) 6)
+              (struct sprint (t/date-time 2020 4 13) (t/date-time 2020 4 27) 7 (list) 6)
+              (struct sprint (t/date-time 2020 4 27) (t/date-time 2020 5 11) 8 (list) 6)
+              (struct sprint (t/date-time 2020 5 11) (t/date-time 2020 5 25) 9 (list) 6)
+              (struct sprint (t/date-time 2020 5 25) (t/date-time 2020 6 8) 10 (list) 6)
+              (struct sprint (t/date-time 2020 6 8) (t/date-time 2020 6 22) 11 (list) 6)
+              (struct sprint (t/date-time 2020 6 22) (t/date-time 2020 7 6) 12 (list) 6)
               ))
 
 (def holidays (list
@@ -55,10 +59,11 @@
              (struct item :inday 1 (t/date-time 2020 12 11) "inday")
              ))
 
-(def tasks
+(def tasks (list
   (struct item :work 4 nil "Get API and Security Signoff")
   (struct item :work 6 nil "Add New Offline Spark Job")
   (struct item :work 6 nil "Update TopN")
+  (struct item :work 2 nil "Determine the required uplift for pinot and request its increase")
   (struct item :work 6 nil "Load test Pinot")
   (struct item :work 1 nil "Add Data to pinot")
   (struct item :work 3 nil "Verify data in pinot")
@@ -67,5 +72,108 @@
   (struct item :work 5 nil "Add LIX to TRB")
   (struct item :work 3 nil "Verify API requests")
   (struct item :work 2 nil "Load test API")
+  (struct item :work 2 nil "Ramp TRB LIX by whitelisting new partners ")
+  ))
+
+(defn update-sprint-task [sprint task]
+  (let [start (:start sprint)
+        end (:end sprint)
+        tasks (conj task (:tasks sprint)) ;; this will need to be tested since conj can feel finicky
+        number (:number sprint)
+        points-left (:points-left sprint)
+        ]
+    (struct sprint start end number tasks points-left)
+    ))
+
+
+(defn update-sprint-storypoints [sprint story-points]
+  (let [start (:start sprint)
+        end (:end sprint)
+        tasks (:tasks sprint) ;; assume the task is added into the sprint elsewhere
+        number (:number sprint) ;; not 6, this is the sprint # in the sequence
+        points-left story-points
+        ]
+    (struct sprint start end number tasks points-left)
+  ))
+
+(defn put-task-in-sprint [sprint task filled-sprints]
+  ;; does not update sprints or tasks list
+  (let [story-point-space (:points-left sprint)
+        task-points (:story-points task)
+        story-points-left-after-completing-task (- story-point-space task-points)
+        task-points-left-after-adding-into-sprint (- task-points story-point-space)
+        task-fits-into-sprint (> story-points-left-after-completing-task -1)
+        ]
+    (if task-fits-into-sprint
+      ;; return the updated sprint and nil
+      (update-sprint-storypoints
+       (update-sprint-task sprint task)
+       story-points-left-after-completing-task)
+      ;; else split the task and return the updated sprint and task
+      ()
+  )))
+
+(defn get-storypoints-left-after-completing-task [sprint task]
+  (let [story-point-space (:points-left sprint)
+        task-points (:story-points task)
+        story-points-left-after-completing-task (- story-point-space task-points)
+        ]
+    story-points-left-after-completing-task
+  ))
+
+(defn add-task-to-sprint [sprint task]
+  ;; returns a new sprint with updated tasks and storypoints
+  (update-sprint-storypoints
+   (update-sprint-task sprint task)
+   (get-storypoints-left-after-completing-task sprint task))
   )
 
+(defn copy-task-with-new-storypoints [task points]
+  (let [type (:type task)
+        story-points points
+        date (:date task)
+        description (:description task)
+        ]
+    (struct item type story-points date description))
+  )
+
+(defn update-larger-task [sprint task]
+  ;; returns two tasks, split from the original task
+  (let [task-points (:story-points task)
+        story-point-space (:points-left sprint)
+        task-points-left-after-adding-into-sprint (- task-points story-point-space)
+        task-to-add (copy-task-with-new-storypoints task story-point-space)
+        task-left (copy-task-with-new-storypoints task task-points-left-after-adding-into-sprint)
+        ]
+    (task-to-add task-left)
+    )
+  )
+
+(def does-task-fit-in-sprint [sprint task]
+  ;; storypoints >= 0, it fits
+  ;; > -1, it fits
+  (> (get-storypoints-left-after-completing-task sprint task) -1)
+  )
+
+(defn fill-sprints [sprints tasks]
+  ;; Method will return a list of partially filled sprints
+  (let [sprint (peek sprints)
+        task (peek tasks)
+        story-point-space (:points-left sprint)
+        task-fits-in-sprint (does-task-fit-in-sprint sprint task)
+        ]
+    (if task-fits-into-sprint
+      ;; return the updated sprint and nil
+      (add-task-to-sprint sprint task)
+      ;; else
+      (let [split-task (update-larger-task)
+            task-to-add (peek split-task)
+            task-leftover (pop split-task)
+            remove-large-task (pop tasks)
+            add-leftover (conj task-leftover remove-large-task)
+            with-smaller-task (conj task-to-add add-leftover)
+            ]
+        (fill-sprints sprints with-smaller-task)
+        )
+      )
+  ))

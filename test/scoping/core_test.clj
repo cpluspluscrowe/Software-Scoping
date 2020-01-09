@@ -31,11 +31,12 @@
          (list filled)
          ))))
 
-;;(deftest fill-sprints-test-too-many-sprints
-;;  (testing "Test filling sprints when there are extra sprints"
-;;    (is (=
-;;         (fill-sprints (list sprint-example sprint-example) (list task-example))
-;;         filled))))
+(deftest fill-sprints-test-too-many-sprints
+  (testing "Test filling sprints when there are extra sprints"
+    (is (=
+         (fill-sprints (list sprint-example sprint-example) (list task-example))
+         (list filled sprint-example)
+         ))))
 
 
 (deftest does-task-fit-in-sprint-test

@@ -146,44 +146,38 @@
   ;; Method will return a list of partially filled sprints
   ;; might throw an exception if we run out of sprints, should not happen for this use
    (if (= (count tasks) 0) ;; base case
-       (concat filled sprints)
-       (let [sprint (peek sprints)
-             task (peek tasks)
-             story-point-space (:points-left sprint)
-             task-fits-in-sprint (does-task-fit-in-sprint sprint task)
-             should-remove-sprint (= story-point-space 0) ;; remove sprints with 0 in them
-             no-more-tasks (= (count tasks) 0)
-             ]
+     (concat filled sprints)
+     (let [sprint (peek sprints)
+           task (peek tasks)
+           story-point-space (:points-left sprint)
+           task-fits-in-sprint (does-task-fit-in-sprint sprint task)
+           should-remove-sprint (= story-point-space 0) ;; remove sprints with 0 in them
+           no-more-tasks (= (count tasks) 0)]
          ;; responsible for popping when a sprint has no more space
-         (if should-remove-sprint
-           (let [updated-sprints (pop sprints)
-                 updated-filled (conj sprint filled)
-                 ]
-             (println "Removing empty sprint")
-             (fill-sprints updated-sprints tasks updated-filled))
+       (if should-remove-sprint
+         (let [updated-sprints (pop sprints)
+               updated-filled (conj sprint filled)]
+           (println "Removing empty sprint")
+           (fill-sprints updated-sprints tasks updated-filled))
          (do
-         (if task-fits-in-sprint
-           (let [updated-sprint (add-task-to-sprint sprint task)
-                 updated-tasks (pop tasks)
-                 remove-stale-sprint (pop sprints)
-                 refresh-sprints (conj remove-stale-sprint updated-sprint)
-                 ]
-             (println "Filling sprint with a task")
-             (fill-sprints refresh-sprints updated-tasks filled))
+           (if task-fits-in-sprint
+             (let [updated-sprint (add-task-to-sprint sprint task)
+                   updated-tasks (pop tasks)
+                   remove-stale-sprint (pop sprints)
+                   refresh-sprints (conj remove-stale-sprint updated-sprint)]
+               (println "Filling sprint with a task")
+               (fill-sprints refresh-sprints updated-tasks filled))
       ;; else
-           (let [split-task (update-larger-task sprint task)
-                 task-to-add (peek split-task)
-                 task-leftover (peek (pop split-task))
-                 remove-large-task (pop tasks)
-                 add-leftover (conj remove-large-task task-leftover)
-                 with-smaller-task (conj add-leftover task-to-add)
-                 ]
-             (println "Splitting a task in two")
-             (fill-sprints sprints with-smaller-task filled)
-             )
-           )
-         )
-)))))
+             (let [split-task (update-larger-task sprint task)
+                   task-to-add (peek split-task)
+                   task-leftover (peek (pop split-task))
+                   remove-large-task (pop tasks)
+                   add-leftover (conj remove-large-task task-leftover)
+                   with-smaller-task (conj add-leftover task-to-add)]
+               (println "Splitting a task in two")
+               (fill-sprints sprints with-smaller-task
+
+                             filled)))))))))
 
 
 

@@ -20,6 +20,41 @@
 (def filled
   (struct block (t/date-time 2020 1 6) (t/date-time 2020 1 20) 1 task-example 3))
 
+(deftest fill-sprints-test
+  (testing "Test filling sprints"
+    (is (=
+         (fill-sprints (list sprint-example) (list task-example))
+         (list filled)))))
+
+(deftest fill-sprints-test-too-many-sprints
+  (testing "Test filling sprints when there are extra sprints"
+    (is (=
+         (fill-sprints (list sprint-example sprint-example) (list task-example))
+         (list filled sprint-example)))))
+
+(deftest does-task-fit-in-sprint-test
+  (testing "Test filling sprints"
+    (is (=
+         (does-task-fit-in-sprint sprint-example task-example)
+         true))
+    (is (=
+         (does-task-fit-in-sprint sprint-example big-task)
+         false))
+    (is (=
+         (does-task-fit-in-sprint sprint-example   (struct item :work 6 nil "Big Task"))
+
+         true))))
+
+(deftest update-larger-task-test
+  (testing "Test filling sprints"
+    (is (=
+         (update-larger-task sprint-example big-task)
+         (list
+          (struct item :work 6 nil "Big Task")
+          (struct item :work 1 nil
+
+                  "Big Task"))))))
+
 (def filled2
   (list
    (struct block nil nil 1 (struct item :work 6 nil "Big Task") 0)

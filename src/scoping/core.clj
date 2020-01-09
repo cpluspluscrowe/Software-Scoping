@@ -149,7 +149,7 @@
     )
   )
 
-(def does-task-fit-in-sprint [sprint task]
+(defn does-task-fit-in-sprint [sprint task]
   ;; storypoints >= 0, it fits
   ;; > -1, it fits
   (> (get-storypoints-left-after-completing-task sprint task) -1)
@@ -162,7 +162,7 @@
         story-point-space (:points-left sprint)
         task-fits-in-sprint (does-task-fit-in-sprint sprint task)
         ]
-    (if task-fits-into-sprint
+    (if task-fits-in-sprint
       ;; return the updated sprint and nil
       (add-task-to-sprint sprint task)
       ;; else

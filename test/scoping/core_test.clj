@@ -7,6 +7,10 @@
 (def sprint-example
   (struct block (t/date-time 2020 1 6) (t/date-time 2020 1 20) 1 (list) 6))
 
+(def sprint-example2
+  (struct block (t/date-time 2020 1 6) (t/date-time 2020 1 20) 2 (list) 6))
+
+
 (def task-example
   (struct item :work 3 nil "Small Task"))
 
@@ -62,15 +66,13 @@
 
                   "Big Task"))))))
 
-
-
-
-;;(deftest fill-sprints-larger-test
-;;  (testing "Test filling sprints with a large task"
-;;    (is (=
-;;         (fill-sprints (list sprint-example sprint-example) (list big-task))
-;;         filled2
-;;         ))))
+(deftest fill-sprints-larger-test
+  (testing "Test filling sprints with a large task"
+    (println "Main test")
+    (is (=
+         (fill-sprints (list sprint-example sprint-example2) (list big-task))
+         (list filled2)
+         ))))
 
 
 (deftest a-test

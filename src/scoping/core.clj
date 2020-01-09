@@ -155,16 +155,33 @@
   (> (get-storypoints-left-after-completing-task sprint task) -1)
   )
 
-(defn fill-sprints [sprints tasks]
+(defn fill-sprints [sprints tasks filled]
   ;; Method will return a list of partially filled sprints
+  ;; might throw an exception if we run out of sprints, should not happen for this use
+
+  (if (= (count tasks) 0) filled ;; base case
   (let [sprint (peek sprints)
         task (peek tasks)
         story-point-space (:points-left sprint)
         task-fits-in-sprint (does-task-fit-in-sprint sprint task)
+        should-remove-sprint (= story-point-space 0) ;; remove sprints with 0 in them
         ]
+    (if should-remove-sprint
+      (let [updated-sprints (pop sprints)
+            ]
+        (fill-sprints updated-sprints tasks filled)
+        )
+      ;; else continue
+      )
+
     (if task-fits-in-sprint
-      ;; return the updated sprint and nil
-      (add-task-to-sprint sprint task)
+      (let [updated-sprint (add-task-to-sprint sprint task)
+            updated-filled (conj updated-sprint filled)
+            updated-sprints (pop sprints)
+            updated-tasks (pop tasks)
+            ]
+        (fill-sprints updated-sprints updated-tasks updated-filled)
+        )
       ;; else
       (let [split-task (update-larger-task)
             task-to-add (peek split-task)
@@ -173,7 +190,11 @@
             add-leftover (conj task-leftover remove-large-task)
             with-smaller-task (conj task-to-add add-leftover)
             ]
-        (fill-sprints sprints with-smaller-task)
+        (fill-sprints sprints with-smaller-task filled)
         )
       )
-  ))
+  )))
+
+
+
+

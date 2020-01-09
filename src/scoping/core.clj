@@ -129,7 +129,7 @@
         task-points-left-after-adding-into-sprint (- task-points story-point-space)
         task-to-add (copy-task-with-new-storypoints task story-point-space)
         task-left (copy-task-with-new-storypoints task task-points-left-after-adding-into-sprint)]
-    (task-to-add task-left)))
+    (list task-to-add task-left)))
 
 (defn does-task-fit-in-sprint [sprint task]
   ;; storypoints >= 0, it fits
@@ -169,6 +169,8 @@
                  add-leftover (conj task-leftover remove-large-task)
                  with-smaller-task (conj task-to-add add-leftover)]
              (fill-sprints sprints with-smaller-task
+
+
 
                            filled)))))))
 

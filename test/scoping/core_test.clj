@@ -37,8 +37,17 @@
     (is (=
          (does-task-fit-in-sprint sprint-example   (struct item :work 6 nil "Big Task"))
 
-
          true))))
+
+(deftest update-larger-task-test
+  (testing "Test filling sprints"
+    (is (=
+         (update-larger-task sprint-example big-task)
+         (list
+          (struct item :work 6 nil "Big Task")
+          (struct item :work 1 nil
+
+                  "Big Task"))))))
 
 
 

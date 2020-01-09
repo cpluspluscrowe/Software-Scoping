@@ -17,6 +17,10 @@
   (struct item :work 3 nil "Small Task")
   )
 
+(def big-task
+  (struct item :work 7 nil "Small Task")
+  )
+
 (def filled
   (struct block (t/date-time 2020 1 6) (t/date-time 2020 1 20) 1 task-example 3)
   )
@@ -28,6 +32,29 @@
          (fill-sprints (list sprint-example) (list task-example))
          filled
            ))))
+
+(deftest does-task-fit-in-sprint-test
+  (testing "Test filling sprints"
+    (is (=
+         (does-task-fit-in-sprint sprint-example task-example)
+         true
+         ))
+    (is (=
+         (does-task-fit-in-sprint sprint-example big-task)
+         false
+         ))
+
+    ))
+
+
+
+
+;;(deftest fill-sprints-larger-test
+;;  (testing "Test filling sprints"
+;;    (is (=
+;;         (fill-sprints (list sprint-example sprint-example) (list big-task))
+;;         filled
+;;         ))))
 
 
 

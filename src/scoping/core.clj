@@ -186,7 +186,7 @@
         (fill-sprints updated-sprints updated-tasks updated-filled)
         )
       ;; else
-      (let [split-task (update-larger-task)
+      (let [split-task (update-larger-task sprint task)
             task-to-add (peek split-task)
             task-leftover (pop split-task)
             remove-large-task (pop tasks)

@@ -19,11 +19,6 @@
 (def filled
   (struct block (t/date-time 2020 1 6) (t/date-time 2020 1 20) 1 task-example 3))
 
-(def filled2
-  (list
-   (struct block (t/date-time 2020 1 6) (t/date-time 2020 1 20) 1 (struct item :work 6 nil "Big Task") 0)
-   (struct block (t/date-time 2020 1 6) (t/date-time 2020 1 20) 1 (struct item :work 1 nil "Big Task") 5)))
-
 (deftest fill-sprints-test
   (testing "Test filling sprints"
     (is (=
@@ -59,6 +54,11 @@
 
                   "Big Task"))))))
 
+(def filled2
+  (list
+   (struct block (t/date-time 2020 1 6) (t/date-time 2020 1 20) 1 (struct item :work 6 nil "Big Task") 0)
+   (struct block (t/date-time 2020 1 6) (t/date-time 2020 1 20) 1 (struct item :work 1 nil "Big Task") 5)))
+
 (deftest fill-sprints-larger-test
   (testing "Test filling sprints with a large task"
     (println "Main test")
@@ -66,10 +66,19 @@
          (fill-sprints (list sprint-example sprint-example2) (list big-task))
          (list filled2)))))
 
+;;(deftest add-buffer-to-tasks-test
+;;  (testing "Test adding buffer to tasks"
+;;    (println "Main test")
+;;    (is (=
+;;         (fill-sprints (list sprint-example sprint-example2) (list big-task))
+;;         (list filled2)))))
+
+
 (deftest a-test
   (testing "Example"
     (is (= 0
-
            0))))
+
+
 
 

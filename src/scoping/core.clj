@@ -15,21 +15,22 @@
 
 (defstruct item :type :story-points :date :description)
 
-(defstruct sprint :start :end :number :tasks :points-left) ;; start and end are dates
+;; think of a block of work
+(defstruct block :start :end :number :tasks :points-left) ;; start and end are dates
 
 (def sprints (list
-              (struct sprint (t/date-time 2020 1 6) (t/date-time 2020 1 20) 1 (list) 6)
-              (struct sprint (t/date-time 2020 1 20) (t/date-time 2020 2 3) 2 (list) 6)
-              (struct sprint (t/date-time 2020 2 3) (t/date-time 2020 2 17) 3 (list) 6)
-              (struct sprint (t/date-time 2020 2 17) (t/date-time 2020 3 2) 4 (list) 6)
-              (struct sprint (t/date-time 2020 3 2) (t/date-time 2020 3 3) 5 (list) 6)
-              (struct sprint (t/date-time 2020 3 30) (t/date-time 2020 4 13) 6 (list) 6)
-              (struct sprint (t/date-time 2020 4 13) (t/date-time 2020 4 27) 7 (list) 6)
-              (struct sprint (t/date-time 2020 4 27) (t/date-time 2020 5 11) 8 (list) 6)
-              (struct sprint (t/date-time 2020 5 11) (t/date-time 2020 5 25) 9 (list) 6)
-              (struct sprint (t/date-time 2020 5 25) (t/date-time 2020 6 8) 10 (list) 6)
-              (struct sprint (t/date-time 2020 6 8) (t/date-time 2020 6 22) 11 (list) 6)
-              (struct sprint (t/date-time 2020 6 22) (t/date-time 2020 7 6) 12 (list) 6)
+              (struct block (t/date-time 2020 1 6) (t/date-time 2020 1 20) 1 (list) 6)
+              (struct block (t/date-time 2020 1 20) (t/date-time 2020 2 3) 2 (list) 6)
+              (struct block (t/date-time 2020 2 3) (t/date-time 2020 2 17) 3 (list) 6)
+              (struct block (t/date-time 2020 2 17) (t/date-time 2020 3 2) 4 (list) 6)
+              (struct block (t/date-time 2020 3 2) (t/date-time 2020 3 3) 5 (list) 6)
+              (struct block (t/date-time 2020 3 30) (t/date-time 2020 4 13) 6 (list) 6)
+              (struct block (t/date-time 2020 4 13) (t/date-time 2020 4 27) 7 (list) 6)
+              (struct block (t/date-time 2020 4 27) (t/date-time 2020 5 11) 8 (list) 6)
+              (struct block (t/date-time 2020 5 11) (t/date-time 2020 5 25) 9 (list) 6)
+              (struct block (t/date-time 2020 5 25) (t/date-time 2020 6 8) 10 (list) 6)
+              (struct block (t/date-time 2020 6 8) (t/date-time 2020 6 22) 11 (list) 6)
+              (struct block (t/date-time 2020 6 22) (t/date-time 2020 7 6) 12 (list) 6)
               ))
 
 (def holidays (list
@@ -82,7 +83,7 @@
         number (:number sprint)
         points-left (:points-left sprint)
         ]
-    (struct sprint start end number tasks points-left)
+    (struct block start end number tasks points-left)
     ))
 
 
@@ -93,7 +94,7 @@
         number (:number sprint) ;; not 6, this is the sprint # in the sequence
         points-left story-points
         ]
-    (struct sprint start end number tasks points-left)
+    (struct block start end number tasks points-left)
   ))
 
 (defn put-task-in-sprint [sprint task filled-sprints]
@@ -155,7 +156,9 @@
   (> (get-storypoints-left-after-completing-task sprint task) -1)
   )
 
-(defn fill-sprints [sprints tasks filled]
+(defn fill-sprints
+  ([sprints tasks] (fill-sprints sprints tasks (list)))
+  ([sprints tasks filled]
   ;; Method will return a list of partially filled sprints
   ;; might throw an exception if we run out of sprints, should not happen for this use
 
@@ -193,7 +196,7 @@
         (fill-sprints sprints with-smaller-task filled)
         )
       )
-  )))
+  ))))
 
 
 

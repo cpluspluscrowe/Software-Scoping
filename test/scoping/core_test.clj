@@ -86,7 +86,24 @@
     (println "Main test")
     (is (=
          (add-buffer-to-tasks (list task) 16)
-         (list task (struct item :buffer 6 nil "Buffer"))
+         (list (struct item :buffer 6 nil "Buffer") task)
          ))))
+
+(deftest add-buffer-to-tasks-test2
+  (testing "Test adding buffer to tasks"
+    (println "Main test")
+    (is (=
+         (add-buffer-to-tasks (list task task) 15)
+         (list task (struct item :buffer 6 nil "Buffer") task)
+         ))))
+
+(deftest add-buffer-to-tasks-test3
+  (testing "Test adding buffer to tasks"
+    (println "Main test")
+    (is (=
+         (add-buffer-to-tasks (list task task task task) 0)
+         (list task task task (struct item :buffer 6 nil "Buffer") task)
+         ))))
+
 
 

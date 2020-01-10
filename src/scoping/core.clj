@@ -84,7 +84,7 @@
     ;; else
     ;; process next task
     (if (= (count tasks) 0)
-      buffered-tasks
+      (reverse buffered-tasks)
       (let [task (peek tasks)
             updated-tasks (pop tasks)
             task-points (:story-points task)

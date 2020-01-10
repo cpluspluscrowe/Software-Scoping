@@ -72,7 +72,9 @@
             (struct item :work 2 nil "Load test API")
             (struct item :work 2 nil "Ramp TRB LIX by whitelisting new partners ")))
 
-(defn add-buffer-to-tasks [tasks point-cumulation buffered-tasks]
+(defn add-buffer-to-tasks
+  ([tasks point-cumulation] (add-buffer-to-tasks tasks point-cumulation (list)))
+  ([tasks point-cumulation buffered-tasks]
   (if (> point-cumulation 15)
     (let [buffer (struct item :buffer 6 nil "Buffer")
           spillover-points (- point-cumulation 16)
@@ -88,7 +90,7 @@
             task-points (:story-points task)
             updated-points (+ task-points point-cumulation)
             update-buffered-tasks (conj buffered-tasks task)]
-        (add-buffer-to-tasks updated-tasks updated-points update-buffered-tasks)))))
+        (add-buffer-to-tasks updated-tasks updated-points update-buffered-tasks))))))
 
 (defn update-sprint-task [sprint task]
   (let [start (:start sprint)
@@ -171,7 +173,6 @@
        (if should-remove-sprint
          (let [updated-sprints (pop sprints)
                updated-filled (conj filled sprint)]
-           (println "Removing empty sprint")
            (fill-sprints updated-sprints tasks updated-filled))
          (do
            (if task-fits-in-sprint
@@ -179,7 +180,6 @@
                    updated-tasks (pop tasks)
                    remove-stale-sprint (pop sprints)
                    refresh-sprints (conj remove-stale-sprint updated-sprint)]
-               (println "Filling sprint with a task")
                (fill-sprints refresh-sprints updated-tasks filled))
       ;; else
              (let [split-task (update-larger-task sprint task)
@@ -188,13 +188,5 @@
                    remove-large-task (pop tasks)
                    add-leftover (conj remove-large-task task-leftover)
                    with-smaller-task (conj add-leftover task-to-add)]
-               (println "Splitting a task in two")
                (fill-sprints sprints with-smaller-task
-
-
-
                              filled)))))))))
-
-
-
-

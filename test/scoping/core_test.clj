@@ -64,7 +64,6 @@
 
 (deftest fill-sprints-larger-test
   (testing "Test filling sprints with a large task"
-    (println "Main Test")
     (is (=
          (fill-sprints
           (list
@@ -78,11 +77,16 @@
     )
   )
 
-;;(deftest add-buffer-to-tasks-test
-;;  (testing "Test adding buffer to tasks"
-;;    (println "Main test")
-;;    (is (=
-;;         (fill-sprints (list sprint-example sprint-example2) (list big-task))
-;;         (list filled2)))))
+(def task
+    (struct item :work 6 nil "Task")
+  )
+
+(deftest add-buffer-to-tasks-test
+  (testing "Test adding buffer to tasks"
+    (println "Main test")
+    (is (=
+         (add-buffer-to-tasks (list task) 16)
+         (list task (struct item :buffer 6 nil "Buffer"))
+         ))))
 
 

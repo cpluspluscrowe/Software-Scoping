@@ -70,9 +70,13 @@
             (struct item :work 5 nil "Add LIX to TRB")
             (struct item :work 3 nil "Verify API requests")
             (struct item :work 2 nil "Load test API")
-            (struct item :work 2 nil "Ramp TRB LIX by whitelisting new partners ")))
+            (struct item :work 2 nil "Ramp TRB LIX by whitelisting new partners ")
+            (struct item :work 3 nil "DTO")
+            )
+  )
 
 (defn add-buffer-to-tasks
+  ([tasks] (add-buffer-to-tasks tasks 0 (list)))
   ([tasks point-cumulation] (add-buffer-to-tasks tasks point-cumulation (list)))
   ([tasks point-cumulation buffered-tasks]
   (if (> point-cumulation 15)
@@ -91,6 +95,8 @@
             updated-points (+ task-points point-cumulation)
             update-buffered-tasks (conj buffered-tasks task)]
         (add-buffer-to-tasks updated-tasks updated-points update-buffered-tasks))))))
+
+(def tasks-and-buffer (add-buffer-to-tasks tasks))
 
 (defn update-sprint-task [sprint task]
   (let [start (:start sprint)

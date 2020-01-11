@@ -105,5 +105,26 @@
          (list task task task (struct item :buffer 6 nil "Buffer") task)
          ))))
 
+(def holiday (struct item :holiday 1 (t/date-time 2020 2 2) "holiday"))
+
+
+(deftest add-holiday-to-sprints-test
+  (let ([given-sprints (list
+                        (struct block (t/date-time 2020 2 1) (t/date-time 2020 2 5) 2 (list) 6)
+                        )
+         expected-sprints (list
+                           (struct block (t/date-time 2020 2 1) (t/date-time 2020 2 5) 2 (list holiday) 6)
+                           )
+         ]
+        )
+
+  (testing "Test adding buffer to tasks"
+    (println "Main test")
+    (is (=
+         (add-holiday-to-sprints given-sprints holiday)
+         expected-sprints
+         ))))
+  )
+
 
 

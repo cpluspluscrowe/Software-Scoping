@@ -205,26 +205,37 @@
     )
   )
 
-(defn add-holiday-to-sprints
-  ([sprints holiday] (add-holiday-to-sprints (pop sprints) (peek sprints) holiday))
-  ([prev-sprints checked-sprints holiday]
-   (if (= (count prev-sprints) 0)
-     checked-sprints
-  (let [sprint (peek prev-sprints)
-        updated-prev-sprints (pop prev-sprints)
-        holiday-date (:date holiday)
-        start (:start sprint)
+(defn is-item-within-sprint [item sprint]
+  (let [start (:start sprint)
         end (:end sprint)
+        date (:date item)
         ]
-    (if (or (and (t/after? holiday-date start) (t/before? holiday-date end)) (or (t/equal? holiday-date start) (t/equal? holiday-date end)))
-      (let [updated-sprint (add-task-to-sprint sprint holiday)
-            updated-sprints (conj (conj checked-sprints updated-sprint) updated-prev-sprints)
-            ]
-        (updated-sprints)
-        )
-      (let [updated-checked-sprints (conj checked-sprints sprint)
-            ]
-        (add-holiday-to-sprints updated-prev-sprints updated-checked-sprints holiday)
-        )
-      )
-    ))))
+  (if (or (and (t/after? date start) (t/before? date end)) (or (t/equal? date start) (t/equal? date end)))
+    true
+    false
+    )
+  ))
+
+;; (defn add-holiday-to-sprints
+;;   ([sprints holiday] (add-holiday-to-sprints (pop sprints) (peek sprints) holiday))
+;;   ([prev-sprints checked-sprints holiday]
+;;    (if (= (count prev-sprints) 0)
+;;      checked-sprints
+;;   (let [sprint (peek prev-sprints)
+;;         updated-prev-sprints (pop prev-sprints)
+;;         holiday-date (:date holiday)
+;;         start (:start sprint)
+;;         end (:end sprint)
+;;         ]
+;;     (if (or (and (t/after? holiday-date start) (t/before? holiday-date end)) (or (t/equal? holiday-date start) (t/equal? holiday-date end)))
+;;       (let [updated-sprint (add-task-to-sprint sprint holiday)
+;;             updated-sprints (conj (conj checked-sprints updated-sprint) updated-prev-sprints)
+;;             ]
+;;         (updated-sprints)
+;;         )
+;;       (let [updated-checked-sprints (conj checked-sprints sprint)
+;;             ]
+;;         (add-holiday-to-sprints updated-prev-sprints updated-checked-sprints holiday)
+;;         )
+;;       )
+;;     ))))

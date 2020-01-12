@@ -135,4 +135,34 @@
          (is-item-within-sprint holiday sprint-with-date)
          ))))
 
+(deftest is-date-within-sprint-test2
+  (def holiday (struct item :holiday 1 (t/date-time 2020 2 2) "holiday"))
+  (def sprint-with-date
+    (struct block (t/date-time 2020 2 1) (t/date-time 2020 2 2) 1 (list) 6)
+    )
+  (testing "Check if date is within the sprint"
+    (is (=
+         (is-item-within-sprint holiday sprint-with-date)
+         ))))
+
+(deftest is-date-within-sprint-test3
+  (def holiday (struct item :holiday 1 (t/date-time 2020 2 2) "holiday"))
+  (def sprint-with-date
+    (struct block (t/date-time 2020 2 2) (t/date-time 2020 2 3) 1 (list) 6)
+    )
+  (testing "Check if date is within the sprint"
+    (is (=
+         (is-item-within-sprint holiday sprint-with-date)
+         ))))
+
+(deftest is-date-within-sprint-test4
+  (def holiday (struct item :holiday 1 (t/date-time 2020 2 2) "holiday"))
+  (def sprint-with-date
+    (struct block (t/date-time 2020 3 2) (t/date-time 2020 3 3) 1 (list) 6)
+    )
+  (testing "Check if date is within the sprint"
+    (is (=
+         (not (is-item-within-sprint holiday sprint-with-date))
+         ))))
+
 

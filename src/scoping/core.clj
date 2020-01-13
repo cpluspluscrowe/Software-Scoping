@@ -116,7 +116,7 @@
 (defn update-sprint-task [sprint task]
   (let [start (:start sprint)
         end (:end sprint)
-        tasks (conj task (:tasks sprint)) ;; this will need to be tested since conj can feel finicky
+        tasks (conj (:tasks sprint) task) ;; this will need to be tested since conj can feel finicky
         number (:number sprint)
         points-left (:points-left sprint)]
     (struct block start end number tasks points-left)))
@@ -264,22 +264,9 @@
 (def with-holiday (add-items-to-sprints holidays with-oncall))
 (def with-inday (add-items-to-sprints indays with-holiday))
 (def with-travel (add-items-to-sprints travels with-holiday))
-(def filled (fill-sprints with-travel tasks-and-buffer))
-;; tasks-and-buffer contains tasks and buffers
-
-;;(def test-filled (fill-sprints sprints tasks-and-buffer))
+(def scheduled (fill-sprints with-travel tasks-and-buffer))
 
 (defn -main [& args]
   (print-sprints with-travel)
   )
-
-
-;; now add-item-to-sprints, where the items oncall, holiday, inday, travel
-;; then add buffers to tasks
-;; then add tasks to sprints
-;; print out the results
-
-
-
-
 

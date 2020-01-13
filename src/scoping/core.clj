@@ -145,6 +145,7 @@
       ())))
 
 (defn get-storypoints-left-after-completing-task [sprint task]
+  ;; if sprint is nil, we'll throw an exception, meaning we've run out of sprints to fill 
   (let [story-point-space (:points-left sprint)
         task-points (:story-points task)
         story-points-left-after-completing-task (- story-point-space task-points)]
@@ -181,7 +182,8 @@
   ([sprints tasks] (fill-sprints sprints tasks (list)))
   ([sprints tasks filled]
   ;; Method will return a list of partially filled sprints
-  ;; might throw an exception if we run out of sprints, should not happen for this use
+   ;; might throw an exception if we run out of sprints, should not happen for this use
+   (if (= (count sprints) 0) (println "Out of sprints" filled) ())
    (if (= (count tasks) 0) ;; base case
      (concat (reverse filled) sprints)
      (let [sprint (peek sprints)
@@ -249,14 +251,40 @@
         end (:end sprint)
         points-left (:points-left sprint)
         ]
-    (println "The sprint dates are " start end)
+    (println "The sprint dates are " start)
+    (println end)
     (doall (map #(println %) (:tasks sprint)))
     (println "Points remaining in the sprint: " points-left)
     )
   )
 
+(defn stack-tasks
+  ([tasks] (stack-tasks tasks (list)))
+  ([tasks building]
+  (if (= 0 (count tasks))
+    (reverse building)
+    (let [task (peek tasks)
+        updated-tasks (pop tasks)
+        csv-task (str "\t" (str (str task) "\n"))
+        updated-building (conj building csv-task)
+        ]
+    (stack-tasks updated-tasks updated-building)
+    )
+    )
+  ))
+
+ (defn sprint-to-csv [sprint]
+   (let [tasks (stack-tasks (:tasks sprint))
+         points (:points-left sprint)
+         start (:start sprint)
+         end (:end sprint)
+         ]
+     (str "From: " start ", To: " end tasks)
+     )
+   )
+
 (defn print-sprints [sprints]
-  (map print-sprint sprints)
+  (doall (map print-sprint sprints))
   )
 
 (def with-oncall (add-items-to-sprints oncalls sprints))
@@ -265,9 +293,7 @@
 (def with-travel (add-items-to-sprints travels with-holiday))
 (def scheduled (fill-sprints with-travel tasks-and-buffer))
 
-(print-sprint (first scheduled))
-
 (defn -main [& args]
-  (print-sprints with-travel)
+;;  (print-sprints scheduled)
   )
 

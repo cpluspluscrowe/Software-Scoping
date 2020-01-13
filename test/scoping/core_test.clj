@@ -167,13 +167,35 @@
 
 (deftest add-item-to-sprints-test
   (def holiday (struct item :holiday 1 (t/date-time 2020 2 2) "holiday"))
-  (def blocks-1 (struct block (t/date-time 2020 2 1) (t/date-time 2020 2 20) 1 (list) 6))
+  (def blocks-2 (struct block (t/date-time 2020 2 1) (t/date-time 2020 2 20) 1 (list) 6))
   (def blocks (list
-               blocks-1
+               blocks-2
                 ))
   (def expected (list
-                (add-task-to-sprint blocks-1 holiday)
+                 (add-task-to-sprint blocks-2 holiday)
                 ))
+
+  (testing "Check if date is within the sprint"
+    (is (=
+         (add-item-to-sprints blocks holiday)
+         expected
+         ))))
+
+(deftest add-item-to-sprints-test2
+  (def holiday (struct item :holiday 1 (t/date-time 2020 2 2) "holiday"))
+  (def blocks-1 (struct block (t/date-time 2020 1 1) (t/date-time 2020 1 20) 1 (list) 6))
+  (def blocks-2 (struct block (t/date-time 2020 2 1) (t/date-time 2020 2 2) 1 (list) 6))
+  (def blocks-3 (struct block (t/date-time 2020 3 1) (t/date-time 2020 3 20) 1 (list) 6))
+  (def blocks (list
+               blocks-1
+               blocks-2
+               blocks-3
+               ))
+  (def expected (list
+                 blocks-1
+                 (add-task-to-sprint blocks-2 holiday)
+                 blocks-3
+                 ))
 
   (testing "Check if date is within the sprint"
     (is (=

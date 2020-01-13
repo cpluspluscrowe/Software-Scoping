@@ -209,7 +209,7 @@
   ))
 
 (defn add-item-to-sprints
-  ([sprints item] (add-item-to-sprints sprints item (list)))
+  ([sprints item] (add-item-to-sprints sprints item (vec nil)))
   ([sprints item building]
   (if (= (count sprints) 0)
     building

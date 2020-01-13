@@ -27,7 +27,14 @@
               (struct block (t/date-time 2020 5 11) (t/date-time 2020 5 25) 9 (list) 6)
               (struct block (t/date-time 2020 5 25) (t/date-time 2020 6 8) 10 (list) 6)
               (struct block (t/date-time 2020 6 8) (t/date-time 2020 6 22) 11 (list) 6)
-              (struct block (t/date-time 2020 6 22) (t/date-time 2020 7 6) 12 (list) 6)))
+              (struct block (t/date-time 2020 6 22) (t/date-time 2020 7 6) 12 (list) 6)
+              (struct block (t/date-time 2020 7 6) (t/date-time 2020 7 20) 12 (list) 6)
+              (struct block (t/date-time 2020 7 20) (t/date-time 2020 8 3) 12 (list) 6)
+              (struct block (t/date-time 2020 8 3) (t/date-time 2020 8 17) 12 (list) 6)
+              (struct block (t/date-time 2020 8 17) (t/date-time 2020 8 31) 12 (list) 6)
+              (struct block (t/date-time 2020 8 31) (t/date-time 2020 9 14) 12 (list) 6)
+              (struct block (t/date-time 2020 9 14) (t/date-time 2020 10 12) 12 (list) 6)
+              ))
 
 (def travels (list
               (struct item :travel 2 (t/date-time 2020 1 29) "Travel Hackathon")
@@ -81,8 +88,8 @@
             (struct item :work 6 nil "Add pivot logic and tests to TRB")
             (struct item :work 5 nil "Add LIX to TRB")
             (struct item :work 3 nil "Verify API requests")
-            (struct item :work 2 nil "Load test API")
-            (struct item :work 2 nil "Ramp TRB LIX by whitelisting new partners ")
+;;            (struct item :work 2 nil "Load test API")
+;;            (struct item :work 2 nil "Ramp TRB LIX by whitelisting new partners ")
             (struct item :work 3 nil "DTO")))
 
 (defn add-buffer-to-tasks
@@ -257,10 +264,10 @@
 (def with-holiday (add-items-to-sprints holidays with-oncall))
 (def with-inday (add-items-to-sprints indays with-holiday))
 (def with-travel (add-items-to-sprints travels with-holiday))
-;; (def filled (fill-sprints with-travel tasks-and-buffer))
+(def filled (fill-sprints with-travel tasks-and-buffer))
 ;; tasks-and-buffer contains tasks and buffers
 
-(def test-filled (fill-sprints sprints tasks-and-buffer))
+;;(def test-filled (fill-sprints sprints tasks-and-buffer))
 
 (defn -main [& args]
   (print-sprints with-travel)

@@ -247,11 +247,10 @@
 (defn print-sprint [sprint]
   (let [start (:start sprint)
         end (:end sprint)
-        tasks (:tasks sprint)
         points-left (:points-left sprint)
         ]
     (println "The sprint dates are " start end)
-    (map #(println "\t" %) tasks)
+    (doall (map #(println %) (:tasks sprint)))
     (println "Points remaining in the sprint: " points-left)
     )
   )
@@ -265,6 +264,8 @@
 (def with-inday (add-items-to-sprints indays with-holiday))
 (def with-travel (add-items-to-sprints travels with-holiday))
 (def scheduled (fill-sprints with-travel tasks-and-buffer))
+
+(print-sprint (first scheduled))
 
 (defn -main [& args]
   (print-sprints with-travel)

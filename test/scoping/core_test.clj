@@ -5,8 +5,7 @@
 (require '[clj-time.core :as t])
 
 (def sprint-example
-  (struct block (t/date-time 2020 1 6) (t/date-time 2020 1 20) 1 (list) 6)
-  )
+  (struct block (t/date-time 2020 1 6) (t/date-time 2020 1 20) 1 (list) 6))
 
 (def sprint-example2
   (struct block (t/date-time 2020 1 6) (t/date-time 2020 1 20) 2 (list) 6))
@@ -58,9 +57,7 @@
 (def filled2
   (list
    (struct block nil nil 1 (struct item :work 6 nil "Big Task") 0)
-   (struct block nil nil 2 (struct item :work 1 nil "Big Task") 5)
-   )
-  )
+   (struct block nil nil 2 (struct item :work 1 nil "Big Task") 5)))
 
 (deftest fill-sprints-larger-test
   (testing "Test filling sprints with a large task"
@@ -68,42 +65,33 @@
          (fill-sprints
           (list
            (struct block nil nil 1 (list) 6)
-           (struct block nil nil 2 (list) 6)
-           )
-          (list big-task)
-          )
-         filled2
-         ))
-    )
-  )
+           (struct block nil nil 2 (list) 6))
+          (list big-task))
+         filled2))))
 
 (def task
-    (struct item :work 6 nil "Task")
-  )
+  (struct item :work 6 nil "Task"))
 
 (deftest add-buffer-to-tasks-test
   (testing "Test adding buffer to tasks"
     (println "Main test")
     (is (=
          (add-buffer-to-tasks (list task) 16)
-         (list (struct item :buffer 6 nil "Buffer") task)
-         ))))
+         (list (struct item :buffer 6 nil "Buffer") task)))))
 
 (deftest add-buffer-to-tasks-test2
   (testing "Test adding buffer to tasks"
     (println "Main test")
     (is (=
          (add-buffer-to-tasks (list task task) 15)
-         (list task (struct item :buffer 6 nil "Buffer") task)
-         ))))
+         (list task (struct item :buffer 6 nil "Buffer") task)))))
 
 (deftest add-buffer-to-tasks-test3
   (testing "Test adding buffer to tasks"
     (println "Main test")
     (is (=
          (add-buffer-to-tasks (list task task task task) 0)
-         (list task task task (struct item :buffer 6 nil "Buffer") task)
-         ))))
+         (list task task task (struct item :buffer 6 nil "Buffer") task)))))
 
 ;; (def holiday (struct item :holiday 1 (t/date-time 2020 2 2) "holiday"))
 ;; (deftest add-holiday-to-sprints-test
@@ -128,58 +116,47 @@
 (deftest is-date-within-sprint-test
   (def holiday (struct item :holiday 1 (t/date-time 2020 2 2) "holiday"))
   (def sprint-with-date
-    (struct block (t/date-time 2020 2 1) (t/date-time 2020 2 5) 1 (list) 6)
-    )
+    (struct block (t/date-time 2020 2 1) (t/date-time 2020 2 5) 1 (list) 6))
   (testing "Check if date is within the sprint"
     (is (=
-         (is-item-within-sprint holiday sprint-with-date)
-         ))))
+         (is-item-within-sprint holiday sprint-with-date)))))
 
 (deftest is-date-within-sprint-test2
   (def holiday (struct item :holiday 1 (t/date-time 2020 2 2) "holiday"))
   (def sprint-with-date
-    (struct block (t/date-time 2020 2 1) (t/date-time 2020 2 2) 1 (list) 6)
-    )
+    (struct block (t/date-time 2020 2 1) (t/date-time 2020 2 2) 1 (list) 6))
   (testing "Check if date is within the sprint"
     (is (=
-         (is-item-within-sprint holiday sprint-with-date)
-         ))))
+         (is-item-within-sprint holiday sprint-with-date)))))
 
 (deftest is-date-within-sprint-test3
   (def holiday (struct item :holiday 1 (t/date-time 2020 2 2) "holiday"))
   (def sprint-with-date
-    (struct block (t/date-time 2020 2 2) (t/date-time 2020 2 3) 1 (list) 6)
-    )
+    (struct block (t/date-time 2020 2 2) (t/date-time 2020 2 3) 1 (list) 6))
   (testing "Check if date is within the sprint"
     (is (=
-         (is-item-within-sprint holiday sprint-with-date)
-         ))))
+         (is-item-within-sprint holiday sprint-with-date)))))
 
 (deftest is-date-within-sprint-test4
   (def holiday (struct item :holiday 1 (t/date-time 2020 2 2) "holiday"))
   (def sprint-with-date
-    (struct block (t/date-time 2020 3 2) (t/date-time 2020 3 3) 1 (list) 6)
-    )
+    (struct block (t/date-time 2020 3 2) (t/date-time 2020 3 3) 1 (list) 6))
   (testing "Check if date is within the sprint"
     (is (=
-         (not (is-item-within-sprint holiday sprint-with-date))
-         ))))
+         (not (is-item-within-sprint holiday sprint-with-date))))))
 
 (deftest add-item-to-sprints-test
   (def holiday (struct item :holiday 1 (t/date-time 2020 2 2) "holiday"))
   (def blocks-2 (struct block (t/date-time 2020 2 1) (t/date-time 2020 2 20) 1 (list) 6))
   (def blocks (list
-               blocks-2
-                ))
+               blocks-2))
   (def expected (list
-                 (add-task-to-sprint blocks-2 holiday)
-                ))
+                 (add-task-to-sprint blocks-2 holiday)))
 
   (testing "Check if date is within the sprint"
     (is (=
          (add-item-to-sprints blocks holiday)
-         expected
-         ))))
+         expected))))
 
 (deftest add-item-to-sprints-test2
   (def holiday (struct item :holiday 1 (t/date-time 2020 2 2) "holiday"))
@@ -189,20 +166,18 @@
   (def blocks (list
                blocks-1
                blocks-2
-               blocks-3
-               ))
+               blocks-3))
   (def expected (list
                  blocks-1
                  (add-task-to-sprint blocks-2 holiday)
-                 blocks-3
-                 ))
+                 blocks-3))
 
   (testing "Check if date is within the sprint"
     (is (=
          (add-item-to-sprints blocks holiday)
-         expected
-         ))))
 
 
-;; add-item-to-sprints
+         expected))))
+
+
 

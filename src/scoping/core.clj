@@ -71,30 +71,26 @@
             (struct item :work 3 nil "Verify API requests")
             (struct item :work 2 nil "Load test API")
             (struct item :work 2 nil "Ramp TRB LIX by whitelisting new partners ")
-            (struct item :work 3 nil "DTO")
-            )
-  )
+            (struct item :work 3 nil "DTO")))
 
 (defn add-buffer-to-tasks
   ([tasks] (add-buffer-to-tasks tasks 0 (list)))
   ([tasks point-cumulation] (add-buffer-to-tasks tasks point-cumulation (list)))
   ([tasks point-cumulation buffered-tasks]
-  (if (> point-cumulation 15)
-    (let [buffer (struct item :buffer 6 nil "Buffer")
-          spillover-points (- point-cumulation 16)
-          ]
-      (add-buffer-to-tasks tasks spillover-points (conj buffered-tasks buffer))
-      )
+   (if (> point-cumulation 15)
+     (let [buffer (struct item :buffer 6 nil "Buffer")
+           spillover-points (- point-cumulation 16)]
+       (add-buffer-to-tasks tasks spillover-points (conj buffered-tasks buffer)))
     ;; else
     ;; process next task
-    (if (= (count tasks) 0)
-      (reverse buffered-tasks)
-      (let [task (peek tasks)
-            updated-tasks (pop tasks)
-            task-points (:story-points task)
-            updated-points (+ task-points point-cumulation)
-            update-buffered-tasks (conj buffered-tasks task)]
-        (add-buffer-to-tasks updated-tasks updated-points update-buffered-tasks))))))
+     (if (= (count tasks) 0)
+       (reverse buffered-tasks)
+       (let [task (peek tasks)
+             updated-tasks (pop tasks)
+             task-points (:story-points task)
+             updated-points (+ task-points point-cumulation)
+             update-buffered-tasks (conj buffered-tasks task)]
+         (add-buffer-to-tasks updated-tasks updated-points update-buffered-tasks))))))
 
 (def tasks-and-buffer (add-buffer-to-tasks tasks))
 
@@ -168,7 +164,7 @@
   ;; Method will return a list of partially filled sprints
   ;; might throw an exception if we run out of sprints, should not happen for this use
    (if (= (count tasks) 0) ;; base case
-       (concat filled sprints)
+     (concat filled sprints)
      (let [sprint (peek sprints)
            task (peek tasks)
            story-point-space (:points-left sprint)
@@ -200,50 +196,21 @@
 (defn is-item-within-sprint [item sprint]
   (let [start (:start sprint)
         end (:end sprint)
-        date (:date item)
-        ]
-  (if (or (and (t/after? date start) (t/before? date end)) (or (t/equal? date start) (t/equal? date end)))
-    true
-    false
-    )
-  ))
+        date (:date item)]
+    (if (or (and (t/after? date start) (t/before? date end)) (or (t/equal? date start) (t/equal? date end)))
+      true
+      false)))
 
 (defn add-item-to-sprints
   ([sprints item] (add-item-to-sprints sprints item (vec nil)))
   ([sprints item building]
-  (if (= (count sprints) 0)
-    building
-  (let [sprint (peek sprints)
-        ]
-    (if (is-item-within-sprint item sprint)
-      (let [updated-sprint (add-task-to-sprint sprint item)
-            ]
-        (add-item-to-sprints (pop sprints) item (conj building updated-sprint))
-        )
-      (add-item-to-sprints (pop sprints) item (conj building sprint))
-      )
-    ))))
+   (if (= (count sprints) 0)
+     building
+     (let [sprint (peek sprints)]
+       (if (is-item-within-sprint item sprint)
+         (let [updated-sprint (add-task-to-sprint sprint item)]
+           (add-item-to-sprints (pop sprints) item (conj building updated-sprint)))
+         (add-item-to-sprints (pop sprints) item (conj building
 
-;; (defn add-holiday-to-sprints
-;;   ([sprints holiday] (add-holiday-to-sprints (pop sprints) (peek sprints) holiday))
-;;   ([prev-sprints checked-sprints holiday]
-;;    (if (= (count prev-sprints) 0)
-;;      checked-sprints
-;;   (let [sprint (peek prev-sprints)
-;;         updated-prev-sprints (pop prev-sprints)
-;;         holiday-date (:date holiday)
-;;         start (:start sprint)
-;;         end (:end sprint)
-;;         ]
-;;     (if (or (and (t/after? holiday-date start) (t/before? holiday-date end)) (or (t/equal? holiday-date start) (t/equal? holiday-date end)))
-;;       (let [updated-sprint (add-task-to-sprint sprint holiday)
-;;             updated-sprints (conj (conj checked-sprints updated-sprint) updated-prev-sprints)
-;;             ]
-;;         (updated-sprints)
-;;         )
-;;       (let [updated-checked-sprints (conj checked-sprints sprint)
-;;             ]
-;;         (add-holiday-to-sprints updated-prev-sprints updated-checked-sprints holiday)
-;;         )
-;;       )
-;;     ))))
+                                                       sprint)))))))
+

@@ -29,6 +29,11 @@
               (struct block (t/date-time 2020 6 8) (t/date-time 2020 6 22) 11 (list) 6)
               (struct block (t/date-time 2020 6 22) (t/date-time 2020 7 6) 12 (list) 6)))
 
+(def travels (list
+              (struct item :travel 2 (t/date-time 2020 1 29) "Travel Hackathon")
+              (struct item :travel 2 (t/date-time 2020 4 23) "Travel Hackathon")
+))
+
 (def holidays (list
                (struct item :holiday 1 (t/date-time 2020 1 20) "holiday")
                (struct item :holiday 1 (t/date-time 2020 2 17) "holiday")
@@ -171,7 +176,7 @@
   ;; Method will return a list of partially filled sprints
   ;; might throw an exception if we run out of sprints, should not happen for this use
    (if (= (count tasks) 0) ;; base case
-     (concat filled sprints)
+     (concat (reverse filled) sprints)
      (let [sprint (peek sprints)
            task (peek tasks)
            story-point-space (:points-left sprint)
@@ -221,7 +226,6 @@
 
                                                        sprint)))))))
 
-
 (defn add-items-to-sprints [items sprints]
   (if (= (count items) 0) sprints
   (let [item (peek items)
@@ -240,14 +244,26 @@
         points-left (:points-left sprint)
         ]
     (println "The sprint dates are " start end)
-    (map println tasks)
+    (map #(println "\t" %) tasks)
     (println "Points remaining in the sprint: " points-left)
     )
   )
 
+(defn print-sprints [sprints]
+  (map print-sprint sprints)
+  )
+
+(def with-oncall (add-items-to-sprints oncalls sprints))
+(def with-holiday (add-items-to-sprints holidays with-oncall))
+(def with-inday (add-items-to-sprints indays with-holiday))
+(def with-travel (add-items-to-sprints travels with-holiday))
+;; (def filled (fill-sprints with-travel tasks-and-buffer))
+;; tasks-and-buffer contains tasks and buffers
+
+(def test-filled (fill-sprints sprints tasks-and-buffer))
+
 (defn -main [& args]
-;;  (def with-oncall (add-item-to-sprints)
-  (print-sprint (peek sprints))
+  (print-sprints with-travel)
   )
 
 

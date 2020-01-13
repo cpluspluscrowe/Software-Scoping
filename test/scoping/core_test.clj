@@ -165,4 +165,22 @@
          (not (is-item-within-sprint holiday sprint-with-date))
          ))))
 
+(deftest add-item-to-sprints-test
+  (def holiday (struct item :holiday 1 (t/date-time 2020 2 2) "holiday"))
+  (def blocks-1 (struct block (t/date-time 2020 2 1) (t/date-time 2020 2 20) 1 (list) 6))
+  (def blocks (list
+               blocks-1
+                ))
+  (def expected (list
+                (add-task-to-sprint blocks-1 holiday)
+                ))
+
+  (testing "Check if date is within the sprint"
+    (is (=
+         (add-item-to-sprints blocks holiday)
+         expected
+         ))))
+
+
+;; add-item-to-sprints
 

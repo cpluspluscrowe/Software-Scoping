@@ -197,14 +197,6 @@
                (fill-sprints sprints with-smaller-task
                              filled)))))))))
 
-(defn add-holidays-to-sprints [sprints holidays]
-  ;; assume that all holidays fit into sprints
-  ;; note that holiday fits in by their date
-  (let [holiday (peek holidays)
-        ]
-    )
-  )
-
 (defn is-item-within-sprint [item sprint]
   (let [start (:start sprint)
         end (:end sprint)
@@ -215,6 +207,22 @@
     false
     )
   ))
+
+(defn add-item-to-sprints
+  ([sprints item] (add-item-to-sprints sprints item (list)))
+  ([sprints item building]
+  (if (= (count sprints) 0)
+    building
+  (let [sprint (peek sprints)
+        ]
+    (if (is-item-within-sprint item sprint)
+      (let [updated-sprint (add-task-to-sprint sprint item)
+            ]
+        (add-item-to-sprints (pop sprints) item (conj building updated-sprint))
+        )
+      (add-item-to-sprints (pop sprints) item (conj building sprint))
+      )
+    ))))
 
 ;; (defn add-holiday-to-sprints
 ;;   ([sprints holiday] (add-holiday-to-sprints (pop sprints) (peek sprints) holiday))

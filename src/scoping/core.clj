@@ -55,14 +55,22 @@
                (struct item :holiday 1 (t/date-time 2020 7 8) "holiday")))
 
 ;; These are Navi's oncall dates
-(def oncalls (list
-              (struct item :oncall 4 (t/date-time 2020 1 28) "Oncall")
-              (struct item :oncall 4 (t/date-time 2020 3 2) "Oncall")
-              (struct item :oncall 4 (t/date-time 2020 4 6) "Oncall")
-              (struct item :oncall 4 (t/date-time 2020 5 11) "Oncall")
-              (struct item :oncall 4 (t/date-time 2020 6 15) "Oncall")
-               ))
+;; (def navi-oncall (list
+;;               (struct item :oncall 4 (t/date-time 2020 1 28) "Oncall")
+;;               (struct item :oncall 4 (t/date-time 2020 3 2) "Oncall")
+;;               (struct item :oncall 4 (t/date-time 2020 4 6) "Oncall")
+;;               (struct item :oncall 4 (t/date-time 2020 5 11) "Oncall")
+;;               (struct item :oncall 4 (t/date-time 2020 6 15) "Oncall")
+;;                ))
 
+;; Chad's oncall schedule
+(def oncalls (list
+              (struct item :oncall 4 (t/date-time 2020 1 20) "Oncall")
+              (struct item :oncall 4 (t/date-time 2020 2 24) "Oncall")
+              (struct item :oncall 4 (t/date-time 2020 3 30) "Oncall")
+              (struct item :oncall 4 (t/date-time 2020 5 4) "Oncall")
+              (struct item :oncall 4 (t/date-time 2020 6 8) "Oncall")
+               ))
 
 (def indays (list
              (struct item :inday 1 (t/date-time 2020 1 24) "inday")
@@ -76,37 +84,44 @@
              (struct item :inday 1 (t/date-time 2020 9 11) "inday")
              (struct item :inday 1 (t/date-time 2020 10 16) "inday")
              (struct item :inday 1 (t/date-time 2020 11 13) "inday")
-             (struct item :inday 1 (t/date-time 2020 12 11) "inday")))
+             (struct item :inday 1 (t/date-time 2020 12 11) "inday")
+             ))
+
+;; Navi's tasks
+;; (def tasks (list
+;;             (struct item :work 5 nil "Create Throttling Design Doc")
+;;             (struct item :work 2 nil "Create Nuage Rule with required Configs for size based throttling for expanded companies")
+;;             (struct item :work 3 nil "Implement throttling service skeleton based on response size based throttling for expanded companies")
+;;             (struct item :work 4 nil "Update the expanded companies throttling service to use corresponding nuage fuse rules")
+;;             (struct item :work 4 nil "Update the throttling filter in TRB to use expanded companies throttle service")
+;;             )
+;;   )
 
 (def tasks (list
-            (struct item :work 5 nil "Create Throttling Design Doc")
-            (struct item :work 2 nil "Create Nuage Rule with required Configs for size based throttling for expanded companies")
-            (struct item :work 3 nil "Implement throttling service skeleton based on response size based throttling for expanded companies")
-            (struct item :work 4 nil "Update the expanded companies throttling service to use corresponding nuage fuse rules")
-            (struct item :work 4 nil "Update the throttling filter in TRB to use expanded companies throttle service")
-            )
-  )
-            ;; (struct item :work 4 nil "Get API and Security Signoff")
-            ;; (struct item :work 6 nil "Add New Offline Spark Job")
-            ;; (struct item :work 6 nil "Update TopN")
-            ;; (struct item :work 2 nil "Determine the required uplift for pinot and request its increase")
-            ;; (struct item :work 6 nil "Load test Pinot")
-            ;; (struct item :work 1 nil "Add Data to pinot")
-            ;; (struct item :work 3 nil "Verify data in pinot")
-            ;; (struct item :work 1 nil "Add new pivot to TRB commons")
-            ;; (struct item :work 6 nil "Add pivot logic and tests to TRB")
-            ;; (struct item :work 5 nil "Add LIX to TRB")
-            ;; (struct item :work 3 nil "Verify API requests")
-;;            (struct item :work 2 nil "Load test API")
-;;            (struct item :work 2 nil "Ramp TRB LIX by whitelisting new partners ")
-;;            (struct item :work 3 nil "DTO")))
+            (struct item :work 3 nil "Schedule Expanded and Throttling Sprints")
+            (struct item :work 1 nil "Push AdWeb Backfill")
+            (struct item :work 6 nil "Add New Offline Spark Job")
+            (struct item :work 4 nil "Get API and Security Signoff")
+            (struct item :work 6 nil "Update TopN")
+            (struct item :work 3 nil "DTO")
+            (struct item :work 2 nil "Determine the required uplift for pinot and request its increase")
+            (struct item :work 6 nil "Load test Pinot")
+            (struct item :work 1 nil "Add Data to pinot")
+            (struct item :work 3 nil "Verify data in pinot")
+            (struct item :work 1 nil "Add new pivot to TRB commons")
+            (struct item :work 6 nil "Add pivot logic and tests to TRB")
+            (struct item :work 5 nil "Add LIX to TRB")
+            (struct item :work 3 nil "Verify API requests")
+           (struct item :work 2 nil "Load test API")
+           (struct item :work 2 nil "Ramp TRB LIX by whitelisting new partners ")
+           ))
 
 (defn add-buffer-to-tasks
   ([tasks] (add-buffer-to-tasks tasks 0 (list)))
   ([tasks point-cumulation] (add-buffer-to-tasks tasks point-cumulation (list)))
   ([tasks point-cumulation buffered-tasks]
    (if (> point-cumulation 15)
-     (let [buffer (struct item :buffer 6 (t/date-time 9000 1 1) "Buffer")
+     (let [buffer (struct item :buffer 6 nil "Buffer")
            spillover-points (- point-cumulation 16)]
        (add-buffer-to-tasks tasks spillover-points (conj buffered-tasks buffer)))
     ;; else
@@ -283,7 +298,7 @@
     (clojure.string/join "\n" (reverse building))
     (let [task (peek tasks)
         updated-tasks (pop tasks)
-        csv-task (str (:description task) "," (:story-points task) ",Navi," (format-date (:date task)))
+        csv-task (str (:description task) "," (:story-points task) ",Chad," (format-date (:date task)))
         updated-building (conj building csv-task)
         ]
     (stack-tasks updated-tasks updated-building)
@@ -313,6 +328,6 @@
 (def scheduled (fill-sprints with-travel tasks-and-buffer))
 
 (defn -main [& args]
-;;  (print-sprints scheduled)
+  (println (sprints-to-csv scheduled))
   )
 

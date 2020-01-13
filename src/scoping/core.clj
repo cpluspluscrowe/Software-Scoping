@@ -1,5 +1,6 @@
 (ns scoping.core)
 (require '[clj-time.core :as t])
+(require '[clj-time.format :as f])
 
 ;; (t/after? one two)
 
@@ -16,24 +17,25 @@
 (defstruct block :start :end :number :tasks :points-left) ;; start and end are dates
 
 (def sprints (list
-              (struct block (t/date-time 2020 1 6) (t/date-time 2020 1 20) 1 (list) 6)
-              (struct block (t/date-time 2020 1 20) (t/date-time 2020 2 3) 2 (list) 6)
-              (struct block (t/date-time 2020 2 3) (t/date-time 2020 2 17) 3 (list) 6)
-              (struct block (t/date-time 2020 2 17) (t/date-time 2020 3 2) 4 (list) 6)
-              (struct block (t/date-time 2020 3 2) (t/date-time 2020 3 3) 5 (list) 6)
-              (struct block (t/date-time 2020 3 30) (t/date-time 2020 4 13) 6 (list) 6)
-              (struct block (t/date-time 2020 4 13) (t/date-time 2020 4 27) 7 (list) 6)
-              (struct block (t/date-time 2020 4 27) (t/date-time 2020 5 11) 8 (list) 6)
-              (struct block (t/date-time 2020 5 11) (t/date-time 2020 5 25) 9 (list) 6)
-              (struct block (t/date-time 2020 5 25) (t/date-time 2020 6 8) 10 (list) 6)
-              (struct block (t/date-time 2020 6 8) (t/date-time 2020 6 22) 11 (list) 6)
-              (struct block (t/date-time 2020 6 22) (t/date-time 2020 7 6) 12 (list) 6)
-              (struct block (t/date-time 2020 7 6) (t/date-time 2020 7 20) 12 (list) 6)
-              (struct block (t/date-time 2020 7 20) (t/date-time 2020 8 3) 12 (list) 6)
-              (struct block (t/date-time 2020 8 3) (t/date-time 2020 8 17) 12 (list) 6)
-              (struct block (t/date-time 2020 8 17) (t/date-time 2020 8 31) 12 (list) 6)
-              (struct block (t/date-time 2020 8 31) (t/date-time 2020 9 14) 12 (list) 6)
-              (struct block (t/date-time 2020 9 14) (t/date-time 2020 10 12) 12 (list) 6)
+              (struct block (t/date-time 2020 1 6) (t/date-time 2020 1 19) 1 (list) 6)
+              (struct block (t/date-time 2020 1 20) (t/date-time 2020 2 2) 2 (list) 6)
+              (struct block (t/date-time 2020 2 3) (t/date-time 2020 2 16) 3 (list) 6)
+              (struct block (t/date-time 2020 2 17) (t/date-time 2020 3 1) 4 (list) 6)
+              (struct block (t/date-time 2020 3 2) (t/date-time 2020 3 15) 5 (list) 6)
+              (struct block (t/date-time 2020 3 16) (t/date-time 2020 3 29) 6 (list) 6)
+              (struct block (t/date-time 2020 3 30) (t/date-time 2020 4 12) 7 (list) 6)
+              (struct block (t/date-time 2020 4 13) (t/date-time 2020 4 26) 8 (list) 6)
+              (struct block (t/date-time 2020 4 27) (t/date-time 2020 5 10) 8 (list) 6)
+              (struct block (t/date-time 2020 5 11) (t/date-time 2020 5 24) 9 (list) 6)
+              (struct block (t/date-time 2020 5 25) (t/date-time 2020 6 7) 10 (list) 6)
+              (struct block (t/date-time 2020 6 8) (t/date-time 2020 6 21) 11 (list) 6)
+              (struct block (t/date-time 2020 6 22) (t/date-time 2020 7 5) 12 (list) 6)
+              (struct block (t/date-time 2020 7 6) (t/date-time 2020 7 19) 13 (list) 6)
+              (struct block (t/date-time 2020 7 20) (t/date-time 2020 8 2) 14 (list) 6)
+              (struct block (t/date-time 2020 8 3) (t/date-time 2020 8 16) 15 (list) 6)
+              (struct block (t/date-time 2020 8 17) (t/date-time 2020 8 30) 16 (list) 6)
+              (struct block (t/date-time 2020 8 31) (t/date-time 2020 9 13) 17 (list) 6)
+              (struct block (t/date-time 2020 9 14) (t/date-time 2020 10 11) 18 (list) 6)
               ))
 
 (def travels (list
@@ -77,27 +79,34 @@
              (struct item :inday 1 (t/date-time 2020 12 11) "inday")))
 
 (def tasks (list
-            (struct item :work 4 nil "Get API and Security Signoff")
-            (struct item :work 6 nil "Add New Offline Spark Job")
-            (struct item :work 6 nil "Update TopN")
-            (struct item :work 2 nil "Determine the required uplift for pinot and request its increase")
-            (struct item :work 6 nil "Load test Pinot")
-            (struct item :work 1 nil "Add Data to pinot")
-            (struct item :work 3 nil "Verify data in pinot")
-            (struct item :work 1 nil "Add new pivot to TRB commons")
-            (struct item :work 6 nil "Add pivot logic and tests to TRB")
-            (struct item :work 5 nil "Add LIX to TRB")
-            (struct item :work 3 nil "Verify API requests")
+            (struct item :work 5 nil "Create Throttling Design Doc")
+            (struct item :work 2 nil "Create Nuage Rule with required Configs for size based throttling for expanded companies")
+            (struct item :work 3 nil "Implement throttling service skeleton based on response size based throttling for expanded companies")
+            (struct item :work 4 nil "Update the expanded companies throttling service to use corresponding nuage fuse rules")
+            (struct item :work 4 nil "Update the throttling filter in TRB to use expanded companies throttle service")
+            )
+  )
+            ;; (struct item :work 4 nil "Get API and Security Signoff")
+            ;; (struct item :work 6 nil "Add New Offline Spark Job")
+            ;; (struct item :work 6 nil "Update TopN")
+            ;; (struct item :work 2 nil "Determine the required uplift for pinot and request its increase")
+            ;; (struct item :work 6 nil "Load test Pinot")
+            ;; (struct item :work 1 nil "Add Data to pinot")
+            ;; (struct item :work 3 nil "Verify data in pinot")
+            ;; (struct item :work 1 nil "Add new pivot to TRB commons")
+            ;; (struct item :work 6 nil "Add pivot logic and tests to TRB")
+            ;; (struct item :work 5 nil "Add LIX to TRB")
+            ;; (struct item :work 3 nil "Verify API requests")
 ;;            (struct item :work 2 nil "Load test API")
 ;;            (struct item :work 2 nil "Ramp TRB LIX by whitelisting new partners ")
-            (struct item :work 3 nil "DTO")))
+;;            (struct item :work 3 nil "DTO")))
 
 (defn add-buffer-to-tasks
   ([tasks] (add-buffer-to-tasks tasks 0 (list)))
   ([tasks point-cumulation] (add-buffer-to-tasks tasks point-cumulation (list)))
   ([tasks point-cumulation buffered-tasks]
    (if (> point-cumulation 15)
-     (let [buffer (struct item :buffer 6 nil "Buffer")
+     (let [buffer (struct item :buffer 6 (t/date-time 9000 1 1) "Buffer")
            spillover-points (- point-cumulation 16)]
        (add-buffer-to-tasks tasks spillover-points (conj buffered-tasks buffer)))
     ;; else
@@ -126,7 +135,7 @@
         end (:end sprint)
         tasks (:tasks sprint) ;; assume the task is added into the sprint elsewhere
         number (:number sprint) ;; not 6, this is the sprint # in the sequence
-        points-left story-points]
+        points-left (max story-points 0)] ;; ensures we do not get negative story points due to oncall/holiday/travel overlap!!!!!!!
     (struct block start end number tasks points-left)))
 
 (defn put-task-in-sprint [sprint task filled-sprints]
@@ -258,14 +267,23 @@
     )
   )
 
+(defn format-date [date]
+  (if date
+    (do
+  (def custom-formatter (f/formatter "MM-dd"))
+  (f/unparse custom-formatter date)
+  )
+    ""
+  ))
+
 (defn stack-tasks
   ([tasks] (stack-tasks tasks (list)))
   ([tasks building]
   (if (= 0 (count tasks))
-    (reverse building)
+    (clojure.string/join "\n" (reverse building))
     (let [task (peek tasks)
         updated-tasks (pop tasks)
-        csv-task (str "\t" (str (str task) "\n"))
+        csv-task (str (:description task) "," (:story-points task) ",Navi," (format-date (:date task)))
         updated-building (conj building csv-task)
         ]
     (stack-tasks updated-tasks updated-building)
@@ -274,23 +292,24 @@
   ))
 
  (defn sprint-to-csv [sprint]
-   (let [tasks (stack-tasks (:tasks sprint))
+   (let [tasks (stack-tasks (reverse (:tasks sprint)))
          points (:points-left sprint)
          start (:start sprint)
          end (:end sprint)
          ]
-     (str "From: " start ", To: " end tasks)
+     (clojure.string/join " " (list "\n" "Sprint #" (:number sprint) " : " (format-date start) "-" (format-date end) "\n" tasks))
+;;     (str "Sprint " (:number sprint) " " start " " end "\n" tasks)
      )
    )
 
-(defn print-sprints [sprints]
-  (doall (map print-sprint sprints))
+(defn sprints-to-csv [sprints]
+  (doall (map sprint-to-csv sprints))
   )
 
 (def with-oncall (add-items-to-sprints oncalls sprints))
 (def with-holiday (add-items-to-sprints holidays with-oncall))
 (def with-inday (add-items-to-sprints indays with-holiday))
-(def with-travel (add-items-to-sprints travels with-holiday))
+(def with-travel (add-items-to-sprints travels with-inday))
 (def scheduled (fill-sprints with-travel tasks-and-buffer))
 
 (defn -main [& args]

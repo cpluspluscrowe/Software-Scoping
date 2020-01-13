@@ -3,9 +3,6 @@
 
 ;; (t/after? one two)
 
-(defn -main [& args]
-  (println "Hello World"))
-
 ;; priorities: holidays/travel, oncall, inday, buffers, tasks
 ;; We want 6 story points of buffer after every 18 story points of work
 
@@ -42,6 +39,16 @@
                (struct item :holiday 1 (t/date-time 2020 7 6) "holiday")
                (struct item :holiday 1 (t/date-time 2020 7 7) "holiday")
                (struct item :holiday 1 (t/date-time 2020 7 8) "holiday")))
+
+;; These are Navi's oncall dates
+(def oncalls (list
+              (struct item :oncall 4 (t/date-time 2020 1 28) "Oncall")
+              (struct item :oncall 4 (t/date-time 2020 3 2) "Oncall")
+              (struct item :oncall 4 (t/date-time 2020 4 6) "Oncall")
+              (struct item :oncall 4 (t/date-time 2020 5 11) "Oncall")
+              (struct item :oncall 4 (t/date-time 2020 6 15) "Oncall")
+               ))
+
 
 (def indays (list
              (struct item :inday 1 (t/date-time 2020 1 24) "inday")
@@ -202,10 +209,10 @@
       false)))
 
 (defn add-item-to-sprints
-  ([sprints item] (add-item-to-sprints sprints item (vec nil)))
+  ([sprints item] (add-item-to-sprints sprints item (list)))
   ([sprints item building]
    (if (= (count sprints) 0)
-     building
+     (reverse building)
      (let [sprint (peek sprints)]
        (if (is-item-within-sprint item sprint)
          (let [updated-sprint (add-task-to-sprint sprint item)]
@@ -213,4 +220,43 @@
          (add-item-to-sprints (pop sprints) item (conj building
 
                                                        sprint)))))))
+
+
+(defn add-items-to-sprints [items sprints]
+  (if (= (count items) 0) sprints
+  (let [item (peek items)
+        updated-sprints (add-item-to-sprints sprints item)
+        ]
+    (add-items-to-sprints (pop items) updated-sprints)
+    )
+  ))
+
+;; I want a way to easily print out a sprint
+;; (defstruct block :start :end :number :tasks :points-left) ;; start and end are dates
+(defn print-sprint [sprint]
+  (let [start (:start sprint)
+        end (:end sprint)
+        tasks (:tasks sprint)
+        points-left (:points-left sprint)
+        ]
+    (println "The sprint dates are " start end)
+    (map println tasks)
+    (println "Points remaining in the sprint: " points-left)
+    )
+  )
+
+(defn -main [& args]
+;;  (def with-oncall (add-item-to-sprints)
+  (print-sprint (peek sprints))
+  )
+
+
+;; now add-item-to-sprints, where the items oncall, holiday, inday, travel
+;; then add buffers to tasks
+;; then add tasks to sprints
+;; print out the results
+
+
+
+
 

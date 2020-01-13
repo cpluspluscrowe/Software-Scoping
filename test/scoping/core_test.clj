@@ -179,5 +179,64 @@
 
          expected))))
 
+(deftest add-items-to-sprints-test
+  (def items (list
+                 (struct item :holiday 1 (t/date-time 2020 2 2) "holiday")
+                 )
+    )
+  (def blocks-2 (struct block (t/date-time 2020 2 1) (t/date-time 2020 2 20) 1 (list) 6))
+  (def blocks (list
+               blocks-2))
+  (def expected (list
+                 (add-task-to-sprint blocks-2 (peek items))
+                 )
+    )
+
+  (testing "Check if date is within the sprint"
+    (is (=
+         (add-items-to-sprints items blocks)
+         expected))))
+
+(deftest add-items-to-sprints-test2
+  (def items (list
+              (struct item :holiday 1 (t/date-time 2020 2 2) "holiday")
+              (struct item :oncall 4 (t/date-time 2020 2 5) "oncall")
+              )
+    )
+  (def blocks-2 (struct block (t/date-time 2020 2 1) (t/date-time 2020 2 20) 1 (list) 6))
+  (def blocks (list
+               blocks-2))
+  (def expected (list
+                 (add-task-to-sprint (add-task-to-sprint blocks-2 (peek items)) (peek (pop items)))
+                 )
+    )
+
+  (testing "Check if date is within the sprint"
+    (is (=
+         (add-items-to-sprints items blocks)
+         expected))))
+
+(deftest add-items-to-sprints-test-multiple-holidays
+  (def items (list
+              (struct item :holiday 1 (t/date-time 2020 2 2) "holiday")
+              (struct item :oncall 4 (t/date-time 2020 2 5) "oncall")
+              )
+    )
+  (def blocks-1 (struct block (t/date-time 2020 2 1) (t/date-time 2020 2 4) 1 (list) 6))
+  (def blocks-2 (struct block (t/date-time 2020 2 5) (t/date-time 2020 2 7) 1 (list) 6))
+  (def blocks (list
+               blocks-1
+               blocks-2
+               ))
+  (def expected (list
+                 (add-task-to-sprint blocks-1 (peek items))
+                 (add-task-to-sprint blocks-2 (peek (pop items)))
+                 )
+    )
+
+  (testing "Check if date is within the sprint"
+    (is (=
+         (add-items-to-sprints items blocks)
+         expected))))
 
 

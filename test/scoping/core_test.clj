@@ -21,14 +21,12 @@
 
 (deftest fill-sprints-test
   (def expected (list
-                 (struct block (t/date-time 2020 1 6) (t/date-time 2020 1 20) 1 (list task-example) 3))
-    )
+                 (struct block (t/date-time 2020 1 6) (t/date-time 2020 1 20) 1 (list task-example) 3)))
 
   (testing "Test filling sprints"
     (is (=
          (fill-sprints (list sprint-example) (list task-example))
-         expected
-         ))))
+         expected))))
 
 (deftest fill-sprints-test-too-many-sprints
   (testing "Test filling sprints when there are extra sprints"
@@ -181,21 +179,17 @@
     (is (=
          (add-item-to-sprints blocks holiday)
 
-
          expected))))
 
 (deftest add-items-to-sprints-test
   (def items (list
-                 (struct item :holiday 1 (t/date-time 2020 2 2) "holiday")
-                 )
-    )
+              (struct item :holiday 1 (t/date-time 2020 2 2) "holiday")))
+
   (def blocks-2 (struct block (t/date-time 2020 2 1) (t/date-time 2020 2 20) 1 (list) 6))
   (def blocks (list
                blocks-2))
   (def expected (list
-                 (add-task-to-sprint blocks-2 (peek items))
-                 )
-    )
+                 (add-task-to-sprint blocks-2 (peek items))))
 
   (testing "Check if date is within the sprint"
     (is (=
@@ -205,16 +199,13 @@
 (deftest add-items-to-sprints-test2
   (def items (list
               (struct item :holiday 1 (t/date-time 2020 2 2) "holiday")
-              (struct item :oncall 4 (t/date-time 2020 2 5) "oncall")
-              )
-    )
+              (struct item :oncall 4 (t/date-time 2020 2 5) "oncall")))
+
   (def blocks-2 (struct block (t/date-time 2020 2 1) (t/date-time 2020 2 20) 1 (list) 6))
   (def blocks (list
                blocks-2))
   (def expected (list
-                 (add-task-to-sprint (add-task-to-sprint blocks-2 (peek items)) (peek (pop items)))
-                 )
-    )
+                 (add-task-to-sprint (add-task-to-sprint blocks-2 (peek items)) (peek (pop items)))))
 
   (testing "Check if date is within the sprint"
     (is (=
@@ -224,24 +215,22 @@
 (deftest add-items-to-sprints-test-multiple-holidays
   (def items (list
               (struct item :holiday 1 (t/date-time 2020 2 2) "holiday")
-              (struct item :oncall 4 (t/date-time 2020 2 5) "oncall")
-              )
-    )
+              (struct item :oncall 4 (t/date-time 2020 2 5) "oncall")))
+
   (def blocks-1 (struct block (t/date-time 2020 2 1) (t/date-time 2020 2 4) 1 (list) 6))
   (def blocks-2 (struct block (t/date-time 2020 2 5) (t/date-time 2020 2 7) 1 (list) 6))
   (def blocks (list
                blocks-1
-               blocks-2
-               ))
+               blocks-2))
   (def expected (list
                  (add-task-to-sprint blocks-1 (peek items))
-                 (add-task-to-sprint blocks-2 (peek (pop items)))
-                 )
-    )
+                 (add-task-to-sprint blocks-2 (peek (pop items)))))
 
   (testing "Check if date is within the sprint"
     (is (=
          (add-items-to-sprints items blocks)
+
+
          expected))))
 
 

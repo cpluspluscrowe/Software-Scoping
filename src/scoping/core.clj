@@ -8,34 +8,38 @@
 (defstruct block :start :end :number :tasks :points-left) ;; start and end are dates
 
 (def sprints (list
-              (struct block (t/date-time 2020 1 6) (t/date-time 2020 1 19) 1 (list) 6)
-              (struct block (t/date-time 2020 1 20) (t/date-time 2020 2 2) 2 (list) 6)
-              (struct block (t/date-time 2020 2 3) (t/date-time 2020 2 16) 3 (list) 6)
-              (struct block (t/date-time 2020 2 17) (t/date-time 2020 3 1) 4 (list) 6)
-              (struct block (t/date-time 2020 3 2) (t/date-time 2020 3 15) 5 (list) 6)
-              (struct block (t/date-time 2020 3 16) (t/date-time 2020 3 29) 6 (list) 6)
-              (struct block (t/date-time 2020 3 30) (t/date-time 2020 4 12) 7 (list) 6)
-              (struct block (t/date-time 2020 4 13) (t/date-time 2020 4 26) 8 (list) 6)
-              (struct block (t/date-time 2020 4 27) (t/date-time 2020 5 10) 8 (list) 6)
-              (struct block (t/date-time 2020 5 11) (t/date-time 2020 5 24) 9 (list) 6)
-              (struct block (t/date-time 2020 5 25) (t/date-time 2020 6 7) 10 (list) 6)
-              (struct block (t/date-time 2020 6 8) (t/date-time 2020 6 21) 11 (list) 6)
-              (struct block (t/date-time 2020 6 22) (t/date-time 2020 7 5) 12 (list) 6)
-              (struct block (t/date-time 2020 7 6) (t/date-time 2020 7 19) 13 (list) 6)
-              (struct block (t/date-time 2020 7 20) (t/date-time 2020 8 2) 14 (list) 6)
-              (struct block (t/date-time 2020 8 3) (t/date-time 2020 8 16) 15 (list) 6)
-              (struct block (t/date-time 2020 8 17) (t/date-time 2020 8 30) 16 (list) 6)
-              (struct block (t/date-time 2020 8 31) (t/date-time 2020 9 13) 17 (list) 6)
-              (struct block (t/date-time 2020 9 14) (t/date-time 2020 10 11) 18 (list) 6)
+              (struct block (t/date-time 2020 2 3) (t/date-time 2020 2 16) 1 (list) 6)
+              (struct block (t/date-time 2020 2 17) (t/date-time 2020 3 1) 2 (list) 6)
+              (struct block (t/date-time 2020 3 2) (t/date-time 2020 3 15) 3 (list) 6)
+              (struct block (t/date-time 2020 3 16) (t/date-time 2020 3 29) 4 (list) 6)
+              (struct block (t/date-time 2020 3 30) (t/date-time 2020 4 12) 5 (list) 6)
+              (struct block (t/date-time 2020 4 13) (t/date-time 2020 4 26) 6 (list) 6)
+              (struct block (t/date-time 2020 4 27) (t/date-time 2020 5 10) 7 (list) 6)
+              (struct block (t/date-time 2020 5 11) (t/date-time 2020 5 24) 8 (list) 6)
+              (struct block (t/date-time 2020 5 25) (t/date-time 2020 6 7) 9 (list) 6)
+              (struct block (t/date-time 2020 6 8) (t/date-time 2020 6 21) 10 (list) 6)
+              (struct block (t/date-time 2020 6 22) (t/date-time 2020 7 5) 11 (list) 6)
+              (struct block (t/date-time 2020 7 6) (t/date-time 2020 7 19) 12 (list) 6)
+              (struct block (t/date-time 2020 7 20) (t/date-time 2020 8 2) 13 (list) 6)
+              (struct block (t/date-time 2020 8 3) (t/date-time 2020 8 16) 14 (list) 6)
+              (struct block (t/date-time 2020 8 17) (t/date-time 2020 8 30) 15 (list) 6)
+              (struct block (t/date-time 2020 8 31) (t/date-time 2020 9 13) 16 (list) 6)
+              (struct block (t/date-time 2020 9 14) (t/date-time 2020 9 27) 17 (list) 6)
+              (struct block (t/date-time 2020 9 28) (t/date-time 2020 10 11) 18 (list) 6)
+              (struct block (t/date-time 2020 10 12) (t/date-time 2020 10 25) 19 (list) 6)
+              (struct block (t/date-time 2020 10 26) (t/date-time 2020 11 8) 20 (list) 6)
+              (struct block (t/date-time 2020 11 9) (t/date-time 2020 11 22) 21 (list) 6)
+              (struct block (t/date-time 2020 11 23) (t/date-time 2020 12 7) 22 (list) 6)
               ))
 
 (def travels (list
-              (struct item :travel 2 (t/date-time 2020 1 29) "Travel Hackathon")
-              (struct item :travel 2 (t/date-time 2020 4 23) "Travel Hackathon")
+              (struct item :travel 2 (t/date-time 2020 2 19) "Get PSOH Signoff")
+              (struct item :travel 3 (t/date-time 2020 3 9) "AI 200")
+              (struct item :travel 3 (t/date-time 2020 3 19) "AI 200")
 ))
 
 (def holidays (list
-               (struct item :holiday 1 (t/date-time 2020 1 20) "holiday")
+;               (struct item :holiday 1 (t/date-time 2020 1 20) "holiday")
                (struct item :holiday 1 (t/date-time 2020 2 17) "holiday")
                (struct item :holiday 1 (t/date-time 2020 3 25) "holiday")
                (struct item :holiday 1 (t/date-time 2020 7 3) "holiday")
@@ -45,9 +49,18 @@
                (struct item :holiday 1 (t/date-time 2020 7 7) "holiday")
                (struct item :holiday 1 (t/date-time 2020 7 8) "holiday")))
 
+(def oncalls (list
+              (struct item :oncall 4 (t/date-time 2020 2 24) "Chad Oncall")
+              (struct item :oncall 4 (t/date-time 2020 3 30) "Chad Oncall")
+              (struct item :oncall 4 (t/date-time 2020 5 4) "Chad Oncall")
+              (struct item :oncall 4 (t/date-time 2020 6 8) "Chad Oncall")
+              (struct item :oncall 4 (t/date-time 2020 7 12) "Chad Oncall")
+              (struct item :oncall 4 (t/date-time 2020 8 16) "Chad Oncall")
+              (struct item :oncall 4 (t/date-time 2020 9 20) "Chad Oncall")
+              ))
 
 (def indays (list
-             (struct item :inday 1 (t/date-time 2020 1 24) "inday")
+;             (struct item :inday 1 (t/date-time 2020 1 24) "inday")
              (struct item :inday 1 (t/date-time 2020 2 21) "inday")
              (struct item :inday 1 (t/date-time 2020 3 20) "inday")
              (struct item :inday 1 (t/date-time 2020 4 17) "inday")
@@ -62,16 +75,39 @@
              ))
 
 (def tasks (list
-           (struct item :work 2 nil "Ramp TRB LIX by whitelisting new partners ")
+            (struct item :work 3 nil "Add quick-and-dirty top 10k companies data to backend")
+            (struct item :work 2 nil "Add top 10k companies data to pinot")
+            (struct item :work 3 nil "Acquire the current member company queries and QPS being made by partners")
+            (struct item :work 6 nil "Load test Pinot")
+            (struct item :work 5 nil "Load test API Box (After Navi Implements Throttling)")
+            (struct item :work 2 nil "Write up project risks based on load testing and how the project will deal with the results of load testing")
+            (struct item :work 0 nil "Milestone Complete: Load Testing/Project Risk Estimation")
+
+            (struct item :work 4 nil "Add job to duplicate member company demographic category with a new name")
+            (struct item :work 3 nil "Add job to get top 10k for expanded companies")
+            (struct item :work 0 nil "Milestone Complete: Completion of Spark Jobs")
+            (struct item :work 2 nil "Add Data to pinot")
+            (struct item :work 2 nil "Verify data in pinot")
+            (struct item :work 0 nil "Milestone Complete: Data in Pinot")
+
+            (struct item :work 6 nil "Add all time granularity to TRB")
+            (struct item :work 1 nil "Add new pivot to TRB commons")
+            (struct item :work 6 nil "Add pivot logic and tests to TRB")
+            (struct item :work 4 nil "Add whitelist LIX to TRB")
+            (struct item :work 0 nil "Milestone Complete: Expanded Companies in TRB")
+
+            (struct item :work 3 nil "Verify API requests from the gateway")
+            (struct item :work 2 nil "Ramp TRB LIX by whitelisting new partners")
+            (struct item :work 0 nil "Milestone Complete: Project Ramp Complete")
            ))
 
 (defn add-buffer-to-tasks
   ([tasks] (add-buffer-to-tasks tasks 0 (list)))
   ([tasks point-cumulation] (add-buffer-to-tasks tasks point-cumulation (list)))
   ([tasks point-cumulation buffered-tasks]
-   (if (> point-cumulation 15)
+   (if (> point-cumulation 29)
      (let [buffer (struct item :buffer 6 nil "Buffer")
-           spillover-points (- point-cumulation 16)]
+           spillover-points (- point-cumulation 30)]
        (add-buffer-to-tasks tasks spillover-points (conj buffered-tasks buffer)))
     ;; else
     ;; process next task
@@ -266,6 +302,16 @@
      )
    )
 
+                                        ; (defstruct block :start :end :number :tasks :points-left) ;; start and end are dates
+(defn sort-sprint-by-date [sprint]
+  (let [tasks (:tasks sprint)
+        sorted-tasks (reverse (sort-by :date tasks))
+        ]
+    (struct block (:start sprint) (:end sprint) (:number sprint) sorted-tasks (:points-left sprint))
+    )
+  )
+
+
 (defn sprints-to-csv [sprints]
   (doall (map sprint-to-csv sprints))
   )
@@ -275,8 +321,9 @@
 (def with-inday (add-items-to-sprints indays with-holiday))
 (def with-travel (add-items-to-sprints travels with-inday))
 (def scheduled (fill-sprints with-travel tasks-and-buffer))
+(def sort-scheduled (map sort-sprint-by-date scheduled))
 
 (defn -main [& args]
-  (println (sprints-to-csv scheduled))
+  (println (sprints-to-csv sort-scheduled))
   )
 

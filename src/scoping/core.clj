@@ -50,13 +50,20 @@
                (struct item :holiday 1 (t/date-time 2020 7 8) "holiday")))
 
 (def oncalls (list
-              (struct item :oncall 4 (t/date-time 2020 2 24) "Chad Oncall")
-              (struct item :oncall 4 (t/date-time 2020 3 30) "Chad Oncall")
-              (struct item :oncall 4 (t/date-time 2020 5 4) "Chad Oncall")
-              (struct item :oncall 4 (t/date-time 2020 6 8) "Chad Oncall")
-              (struct item :oncall 4 (t/date-time 2020 7 12) "Chad Oncall")
-              (struct item :oncall 4 (t/date-time 2020 8 16) "Chad Oncall")
-              (struct item :oncall 4 (t/date-time 2020 9 20) "Chad Oncall")
+              (struct item :oncall 3 (t/date-time 2020 2 24) "Chad Oncall")
+              (struct item :oncall 1 (t/date-time 2020 3 2) "Chad Oncall")
+              (struct item :oncall 3 (t/date-time 2020 3 30) "Chad Oncall")
+              (struct item :oncall 1 (t/date-time 2020 4 6) "Chad Oncall")
+              (struct item :oncall 3 (t/date-time 2020 5 4) "Chad Oncall")
+              (struct item :oncall 1 (t/date-time 2020 5 11) "Chad Oncall")
+              (struct item :oncall 3 (t/date-time 2020 6 8) "Chad Oncall")
+              (struct item :oncall 1 (t/date-time 2020 6 15) "Chad Oncall")
+              (struct item :oncall 3 (t/date-time 2020 7 12) "Chad Oncall")
+              (struct item :oncall 1 (t/date-time 2020 7 19) "Chad Oncall")
+              (struct item :oncall 3 (t/date-time 2020 8 16) "Chad Oncall")
+              (struct item :oncall 1 (t/date-time 2020 8 23) "Chad Oncall")
+              (struct item :oncall 3 (t/date-time 2020 9 20) "Chad Oncall")
+              (struct item :oncall 1 (t/date-time 2020 9 27) "Chad Oncall")
               ))
 
 (def indays (list

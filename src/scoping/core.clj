@@ -311,7 +311,7 @@
 
                                         ; (defstruct block :start :end :number :tasks :points-left) ;; start and end are dates
 (defn sort-sprint-by-date [sprint]
-  (let [tasks (:tasks sprint)
+  (let [tasks (reverse (:tasks sprint))
         sorted-tasks (reverse (sort-by :date tasks))
         ]
     (struct block (:start sprint) (:end sprint) (:number sprint) sorted-tasks (:points-left sprint))
